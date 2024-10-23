@@ -6,7 +6,7 @@ import LoginPage from "./components/pages/LoginPage";
 import RegisterPage from "./components/pages/RegisterPage";
 import ProfilePage from "./components/pages/ProfilePage";
 import ListsPage from "./components/pages/ListsPage";
-import TodoPage from "./components/pages/TodoPage";
+import TodosPage from "./components/pages/TodosPage";
 import './index.css';
 import Layout from "./components/layout/Layout";
 
@@ -22,7 +22,7 @@ function App() {
                   <Route path="/register" element={<RegisterPage/>}/>
                   <Route path="/profile" element={<ProfilePage/>}/>
                   <Route path="/lists" element={<ListsPage/>}/>
-                  <Route path="/lists/:id" element={<TodoPage/>}/>
+                  <Route path="/todo-lists/:id" element={<TodosPage/>}/>
               </Routes>
               </Layout>
           </Router>

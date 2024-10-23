@@ -1,23 +1,22 @@
-// src/components/TodoPage.tsx
+// src/components/pages/TodosPage.tsx
 import React, {useState} from 'react';
 import {useTodos} from '../../hooks/useTodos';
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import api from '../../api/api';
 import {useParams} from 'react-router-dom';
+import TodoItem from '../partials/TodoItem';
 
-const TodoPage: React.FC = () => {
+const TodosPage: React.FC = () => {
     const {id: listId} = useParams<{ id: string }>();
     const {data: todos, isLoading, error} = useTodos(listId!);
     const [newTodoTitle, setNewTodoTitle] = useState('');
     const queryClient = useQueryClient();
-    const createTodo = (title: string, listId: string | undefined) => api.post(`/lists/${listId}/todos`, {title});
-    const deleteTodo = (todoId: string, listId: string | undefined) => api.delete(`/lists/${listId}/todos/${todoId}`);
-    const toggleTodo = (todo: any, listId: string | undefined) => api.put(`/lists/${listId}/todos/${todo.id}`, {
-        ...todo,
-        isCompleted: !todo.isCompleted,
+    const createTodo = (title: string, listId: string | undefined) => api.post(`/todo-lists/${listId}/todo`, {title});
+    const deleteTodo = (todoId: string, listId: string | undefined) => api.delete(`/todo-lists/${listId}/todo/${todoId}`);
+    const toggleTodo = (todo: any, listId: string | undefined) => api.put(`/todo-lists/${listId}/todo/${todo.id}`, {
+        completed: !todo.completed,
     });
 
-// Mutation to create a new todo
     const createTodoMutation = useMutation({
         mutationFn: (title: string) => createTodo(title, listId),
         onSuccess: () => {
@@ -26,7 +25,6 @@ const TodoPage: React.FC = () => {
         },
     });
 
-// Mutation to delete a todo
     const deleteTodoMutation = useMutation({
         mutationFn: (todoId: string) => deleteTodo(todoId, listId),
         onSuccess: () => {
@@ -34,7 +32,6 @@ const TodoPage: React.FC = () => {
         },
     });
 
-// Mutation to toggle todo completion
     const toggleTodoMutation = useMutation({
         mutationFn: (todo: any) => toggleTodo(todo, listId),
         onSuccess: () => {
@@ -66,33 +63,33 @@ const TodoPage: React.FC = () => {
     }
 
     return (
-        <div className="todo-page">
-            <h2>Todos</h2>
-            <form onSubmit={handleCreateTodo}>
+        <div className="todo-page p-4 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
+            <h2 className="text-2xl font-bold text-center">Todos</h2>
+            <form onSubmit={handleCreateTodo} className="flex space-x-2">
                 <input
                     type="text"
                     value={newTodoTitle}
                     onChange={(e) => setNewTodoTitle(e.target.value)}
                     placeholder="New todo title"
                     required
+                    className="flex-grow p-2 border border-gray-300 rounded"
                 />
-                <button type="submit">Add Todo</button>
+                <button type="submit" className="p-2 bg-blue-500 text-white rounded hover:bg-blue-700">
+                    Add Todo
+                </button>
             </form>
-            <ul>
+            <ul className="space-y-2">
                 {todos?.map((todo) => (
-                    <li key={todo.id}>
-                        <input
-                            type="checkbox"
-                            checked={todo.isCompleted}
-                            onChange={() => handleToggleTodo(todo)}
-                        />
-                        {todo.title}
-                        <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
-                    </li>
+                    <TodoItem
+                        key={todo.id}
+                        todo={todo}
+                        onToggle={handleToggleTodo}
+                        onDelete={handleDeleteTodo}
+                    />
                 ))}
             </ul>
         </div>
     );
 };
 
-export default TodoPage;
+export default TodosPage;

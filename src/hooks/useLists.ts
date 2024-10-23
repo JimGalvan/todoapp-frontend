@@ -6,7 +6,7 @@ export const useLists = () => {
     return useQuery<TodoList[], Error>({
         queryKey: ['lists'],
         queryFn: async () => {
-            const {data} = await api.get('/lists');
+            const {data} = await api.get('/todo-lists');
             return data;
         }
     });

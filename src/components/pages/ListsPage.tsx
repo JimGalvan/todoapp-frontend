@@ -10,8 +10,8 @@ const ListsPage: React.FC = () => {
     const [newListName, setNewListName] = useState('');
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const createList = (name: string) => api.post('/lists', {name});
-    const deleteList = (id: string) => api.delete(`/lists/${id}`);
+    const createList = (name: string) => api.post('/todo-lists', {name});
+    const deleteList = (id: string) => api.delete(`/todo-lists/${id}`);
 
 // Mutation to create a new list
     const createListMutation = useMutation({
@@ -50,29 +50,44 @@ const ListsPage: React.FC = () => {
     }
 
     return (
-        <div className="lists-page">
-            <h2>My Lists</h2>
-            <form onSubmit={handleCreateList}>
+        <div className="lists-page p-6 bg-gray-100 min-h-screen">
+            <h2 className="text-2xl font-bold mb-4">My Lists</h2>
+            <form onSubmit={handleCreateList} className="mb-6">
                 <input
                     type="text"
                     value={newListName}
                     onChange={(e) => setNewListName(e.target.value)}
                     placeholder="New list name"
                     required
+                    className="p-2 border border-gray-300 rounded mb-2 w-full"
                 />
-                <button type="submit">Create List</button>
+                <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+                    Create List
+                </button>
             </form>
-            <ul>
+            <ul className="space-y-4">
                 {lists?.map((list) => (
-                    <li key={list.id}>
-                        {list.name}
-                        <button onClick={() => navigate(`/lists/${list.id}`)}>View</button>
-                        <button onClick={() => handleDeleteList(list.id)}>Delete</button>
+                    <li key={list.id} className="p-4 bg-white rounded shadow flex justify-between items-center">
+                        <span>{list.name}</span>
+                        <div className="space-x-2">
+                            <button
+                                    onClick={() => navigate(`/todo-lists/${list.id}`)}
+                                className="bg-green-500 text-white p-2 rounded"
+                            >
+                                View
+                            </button>
+                            <button
+                                onClick={() => handleDeleteList(list.id)}
+                                className="bg-red-500 text-white p-2 rounded"
+                            >
+                                Delete
+                            </button>
+                        </div>
                     </li>
                 ))}
             </ul>
         </div>
     );
-};
+}
 
 export default ListsPage;
