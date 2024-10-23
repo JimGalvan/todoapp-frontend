@@ -7,6 +7,8 @@ import RegisterPage from "./components/pages/RegisterPage";
 import ProfilePage from "./components/pages/ProfilePage";
 import ListsPage from "./components/pages/ListsPage";
 import TodoPage from "./components/pages/TodoPage";
+import './index.css';
+import Layout from "./components/layout/Layout";
 
 const queryClient = new QueryClient();
 
@@ -14,6 +16,7 @@ function App() {
   return (
       <QueryClientProvider client={queryClient}>
           <Router>
+              <Layout>
               <Routes>
                   <Route path="/" element={<LoginPage/>}/>
                   <Route path="/register" element={<RegisterPage/>}/>
@@ -21,6 +24,7 @@ function App() {
                   <Route path="/lists" element={<ListsPage/>}/>
                   <Route path="/lists/:id" element={<TodoPage/>}/>
               </Routes>
+              </Layout>
           </Router>
       </QueryClientProvider>
   );
